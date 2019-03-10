@@ -1,4 +1,11 @@
 .DS_STORE
 
+.idea/
 *.wav
 *.m4a
+
+audio/idfwu.txt
+audio/lyrics.txt
+audio/nwa.txt
+audio/tko.txt
+
