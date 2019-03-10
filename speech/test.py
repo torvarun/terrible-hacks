@@ -82,6 +82,12 @@ plt.show()
 
 res = librosa.istft(S_foreground * phase)
 
-print(res.shape)
+print(res[:5568])
+
+tmp = res[:5568]
+np.random.shuffle(tmp)
+
+res = np.append(tmp, res[5568:])
 
 librosa.output.write_wav('out-jayz.wav', res, sr)
+
