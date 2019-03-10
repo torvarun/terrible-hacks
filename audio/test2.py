@@ -55,6 +55,55 @@ def clean(alt):
 
 bad = ['nigga', 'niggas', 'fuck', 'shit', 'bitch']
 
+
+def cleaner(alt, lyrics):
+    words = alt[0].alternatives[0].words
+    wlist = [x.word for x in words]
+    occr = []
+    bleeps = []
+    include = set()
+    prv=0
+    for i,w in enumerate(wlist):
+        if w in words[prv:]:
+            idx = words[prv:].index(w)
+            if idx-prv<3:
+                occr += [idx]
+                prv = idx
+            else:
+                occr += ['fail']
+        else:
+            occr+=['fail']
+    for i,q in enumerate(wlist):
+        if words[i] in bad and occr[i]=='fail':
+            iprev = -1
+            inext = len(words)
+            for j in range(i-1, -1, -1):
+                if occr[j]!='fail':
+                    iprev=occr[j]
+                    break
+            for j in range(i+1, len(words)):
+                if occr[j]!='fail':
+                    inext=occr[j]
+                    break
+            if inext-iprev < 3:
+                # start = words[iprev+1].start_time.seconds + words[iprev+1].start_time.nanos * 1e-9
+                # end = words[inext-1].end_time.seconds + words[inext-1].end_time.nanos * 1e-9
+
+                include+={x for x in range(iprev+1, inext)}
+        elif words[i] in bad:
+            include+={occr[i]}
+    for i,w in enumerate(words):
+        if i in include or w.word in bad:
+            s = w.start_time.seconds + (w.start_time.nanos*1e-9)
+            if s<0:
+                s=0
+            e = w.end_time.seconds + (w.end_time.nanos*1e-9)
+            if s==e:
+                s-=0.05
+                e+=0.05
+            bleeps += [(s,e)]
+    return bleeps
+
 def match(alt, lyrics):
     words = alt[0].alternatives[0].words
     wlist = [x.word for x in words]
@@ -100,5 +149,5 @@ def match(alt, lyrics):
             if s==e:
                 s-=0.05
                 e+=0.05
-            bleeps += [(w.word,s,e)]
+            bleeps += [(s,e)]
     return bleeps
