@@ -89,12 +89,16 @@ def match(alt, lyrics):
                 # end = words[inext-1].end_time.seconds + words[inext-1].end_time.nanos * 1e-9
 
                 exclude+={x for x in range(iprev+1, inext)}
+        elif words[i] in bad:
+            exclude+={occr[i]}
     for i,w in enumerate(words):
-        if i not in exclude:
-            s = w.start_time.seconds + (w.start_time.nanos*1e-9) - 0.1
+        if i not in exclude and w.word not in bad:
+            s = w.start_time.seconds + (w.start_time.nanos*1e-9)
             if s<0:
                 s=0
-            e = w.end_time.seconds + (w.end_time.nanos*1e-9) + 0.1
-            bleeps += [(w.word, s,e)]
-
+            e = w.end_time.seconds + (w.end_time.nanos*1e-9)
+            if s==e:
+                s-=0.05
+                e+=0.05
+            bleeps += [(w.word,s,e)]
     return bleeps
