@@ -9,6 +9,7 @@ import re
 import string
 import soundfile
 
+# very comprehensive dictionary with reinforcement learning algorithm (manually add more swear words if incomplete)
 bad = ['nigga', 'niggas', 'fuck', 'shit', 'bitch', 'shit', 'dick', 'tits', 'fucker',
        'fucking', 'hoe', 'asshole', 'whore', 'homo', 'ho', 'ass', 'stupid-ass', 'motherfucker']
 
